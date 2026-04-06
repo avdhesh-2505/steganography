@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>StegoSecure AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: 'Segoe UI', sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:black;
+color:white;
+overflow-x:hidden;
+}
+
+/* ANIMATED BACKGROUND */
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: radial-gradient(circle at 20% 30%, rgba(255,0,0,0.15), transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(255,0,0,0.1), transparent 40%);
+animation:movebg 10s infinite alternate;
+z-index:-1;
+}
+
+@keyframes movebg{
+0%{transform:scale(1)}
+100%{transform:scale(1.2)}
+}
+
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 80px;
+background:rgba(0,0,0,0.8);
+border-bottom:1px solid red;
+position:sticky;
+top:0;
+backdrop-filter:blur(10px);
+}
+
+nav h1{
+color:red;
+font-size:26px;
+letter-spacing:2px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:25px;
+font-size:18px;
+transition:0.3s;
+}
+
+nav a:hover{
+color:red;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.hero h2{
+font-size:60px;
+color:red;
+margin-bottom:20px;
+text-shadow:0 0 20px red;
+}
+
+.hero p{
+width:65%;
+font-size:18px;
+line-height:1.8;
+color:#ddd;
+}
+
+/* BUTTONS */
+
+.buttons{
+margin-top:40px;
+}
+
+.buttons button{
+padding:14px 40px;
+font-size:18px;
+margin:10px;
+border:none;
+background:linear-gradient(45deg,#ff0000,#8b0000);
+color:white;
+border-radius:30px;
+cursor:pointer;
+transition:0.4s;
+}
+
+.buttons button:hover{
+transform:scale(1.1);
+box-shadow:0 0 20px red;
+}
+
+/* SECTION */
+
+section{
+padding:100px 120px;
+}
+
+/* TITLES */
+
+.title{
+text-align:center;
+font-size:42px;
+margin-bottom:60px;
+color:red;
+text-shadow:0 0 10px red;
+}
+
+/* ABOUT */
+
+.about{
+text-align:center;
+line-height:1.8;
+color:#ccc;
+font-size:18px;
+}
+
+/* FEATURES */
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:40px;
+}
+
+.card{
+background:rgba(255,255,255,0.03);
+border:1px solid rgba(255,0,0,0.3);
+padding:35px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+transition:0.4s;
+}
+
+.card:hover{
+transform:translateY(-12px);
+box-shadow:0 0 20px red;
+border:1px solid red;
+}
+
+.card h3{
+color:red;
+margin-bottom:15px;
+}
+
+.card p{
+color:#bbb;
+}
+
+/* TECHNOLOGY */
+
+.tech-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:30px;
+}
+
+.tech{
+background:#111;
+padding:25px;
+text-align:center;
+border-radius:10px;
+border:1px solid red;
+transition:0.3s;
+}
+
+.tech:hover{
+background:red;
+color:black;
+transform:scale(1.05);
+}
+
+/* STATS */
+
+.stats{
+display:flex;
+justify-content:space-around;
+flex-wrap:wrap;
+margin-top:40px;
+}
+
+.stat{
+text-align:center;
+margin:20px;
+}
+
+.stat h2{
+font-size:45px;
+color:red;
+}
+
+.stat p{
+color:#aaa;
+}
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:30px;
+background:#080808;
+border-top:1px solid red;
+margin-top:50px;
+color:#aaa;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<h1>StegoSecure AI</h1>
+
+<div>
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="/uploads">Upload</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+</div>
+
+</nav>
+
+<!-- HERO -->
+
+<div class="hero">
+
+<h2>AI Powered Secure Steganography</h2>
+
+<p>
+A next-generation cybersecurity system that integrates AES encryption and
+CNN-based steganography to protect confidential data by hiding encrypted
+information inside digital images while maintaining high visual quality
+and resisting cyber attacks.
+</p>
+
+<div class="buttons">
+
+<a href="/login">
+<button>Login</button>
+</a>
+
+<a href="/register">
+<button>Register</button>
+</a>
+
+</div>
+
+</div>
+
+<!-- ABOUT -->
+
+<section id="about">
+
+<h2 class="title">About The Project</h2>
+
+<p class="about">
+
+This project presents a modern approach to secure communication by combining
+cryptography and deep learning. The system encrypts secret messages using the
+Advanced Encryption Standard (AES) and then hides them within digital images
+using Convolutional Neural Networks (CNN). This dual security layer ensures
+that even if attackers detect hidden data, it remains encrypted and
+unreadable without the correct key.
+
+</p>
+
+</section>
+
+<!-- FEATURES -->
+
+<section id="features">
+
+<h2 class="title">Key Security Features</h2>
+
+<div class="features">
+
+<div class="card">
+<h3>🔐 AES Encryption</h3>
+<p>Encrypts confidential information before embedding to ensure strong data protection.</p>
+</div>
+
+<div class="card">
+<h3>🧠 CNN Based Embedding</h3>
+<p>Uses deep learning algorithms to select optimal regions of the image for hiding data.</p>
+</div>
+
+<div class="card">
+<h3>🖼 Image Quality Protection</h3>
+<p>Maintains visual similarity between cover and stego images using intelligent embedding.</p>
+</div>
+
+<div class="card">
+<h3>🛡 Steganalysis Resistance</h3>
+<p>Reduces detection probability by attackers using advanced embedding techniques.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- TECHNOLOGY -->
+
+<section id="tech">
+
+<h2 class="title">Technologies Used</h2>
+
+<div class="tech-grid">
+
+<div class="tech">Python</div>
+<div class="tech">Flask</div>
+<div class="tech">AES Encryption</div>
+<div class="tech">CNN</div>
+<div class="tech">Image Processing</div>
+<div class="tech">Cybersecurity</div>
+
+</div>
+
+</section>
+
+<!-- STATS -->
+
+<section>
+
+<h2 class="title">System Highlights</h2>
+
+<div class="stats">
+
+<div class="stat">
+<h2>256-bit</h2>
+<p>AES Encryption Strength</p>
+</div>
+
+<div class="stat">
+<h2>High</h2>
+<p>PSNR Image Quality</p>
+</div>
+
+<div class="stat">
+<h2>Low</h2>
+<p>MSE Distortion</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 StegoSecure AI | Cybersecurity Project</p>
+
+</footer>
+
+</body>
+</html>
