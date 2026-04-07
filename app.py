@@ -27,7 +27,12 @@ with app.app_context():
         db.create_all()
 
 # Configuration
+# Configuration
 UPLOAD_FOLDER = 'uploads'
+PROCESSED_FOLDER = 'processed'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(PROCESSED_FOLDER, exist_ok=True)
+
 ALLOWED_IMAGE_EXTENSIONS = {'png'}
 ALLOWED_DOC_EXTENSIONS = {'pdf', 'txt'}
 MAX_FILE_SIZE = 1 * 1024 * 1024 # 1 MB
@@ -64,8 +69,10 @@ def login():
                         flash('Invalid email or password','error')
         return render_template('login.html')
 
-@app.route('/uploads',methods=['POST'])
-def upload_files():
+@app.route('/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
+    if request.method == 'POST':
         if'cover_image' not in request.files or 'secret_file' not in request.files:
                 flash('No file part','error')
                 return redirect(request.url)
@@ -93,38 +100,47 @@ def upload_files():
         cover_image.save(cover_path)
         secret_file.save(secret_path)
 
-        # 5. Encryption & Embedding
-        aes = AESCipher()
-        encrypted_bytes, iv, key = aes.encrypt_file(secret_path)
-        raw_binary_string = bytes_to_binary(encrypted_bytes)
+        try:
+            # Re-enabling imports (wrapped in try/except)
+            from utils.crypto import AESCipher
+            from utils.binary import bytes_to_binary, add_error_correction
+            from utils.steganography import embed_secret
 
-        # Error Correction
-        from utils.binary import add_error_correction
-        encoded_binary_string = add_error_correction(raw_binary_string, n=5)
+            aes = AESCipher()
+            encrypted_bytes, iv, key = aes.encrypt_file(secret_path)
+            raw_binary_string = bytes_to_binary(encrypted_bytes)
 
-        # Save Metadata
-        metadata = {
+            # Error Correction
+            encoded_binary_string = add_error_correction(raw_binary_string, n=5)
+
+            # Save Metadata
+            metadata = {
                 'original_filename': secret_filename,
                 'key': binascii.hexlify(key).decode('utf-8'),
                 'iv': binascii.hexlify(iv).decode('utf-8'),
                 'binary_length': len(encoded_binary_string)
-        }
+            }
 
-        metadata_path = os.path.join('processed', f"{secret_filename}_meta.json")
-        with open(metadata_path, 'w') as f:
-                json.dump(metadata,f,indent=4)
-
-        # Generate Stego Image
-        stego_filename = f"stego_{image_filename}"
-        stego_path = os.path.join('processed', stego_filename)
-        embed_secret(cover_path, encoded_binary_string, stego_path)
-
-        metadata['stego_image_path'] = stego_path
-        with open(metadata_path, 'w') as f:
+            metadata_path = os.path.join(PROCESSED_FOLDER, f"{secret_filename}_meta.json")
+            with open(metadata_path, 'w') as f:
                 json.dump(metadata, f, indent=4)
 
-        flash(f'Steganography Complete!', 'success')
-        return render_template('index.html', stego_filename=stego_filename)
+            # Generate Stego Image
+            stego_filename = f"stego_{image_filename}"
+            stego_path = os.path.join(PROCESSED_FOLDER, stego_filename)
+            embed_secret(cover_path, encoded_binary_string, stego_path)
+
+            metadata['stego_image_path'] = stego_path
+            with open(metadata_path, 'w') as f:
+                json.dump(metadata, f, indent=4)
+
+            flash(f'Steganography Complete!', 'success')
+            return render_template('uploads.html', stego_filename=stego_filename)
+        except Exception as e:
+            flash(f"An error occurred: {str(e)}", 'error')
+            return redirect(url_for('upload'))
+
+    return render_template('uploads.html')
 
 # Download Route
 @app.route('/download/<filename>')
