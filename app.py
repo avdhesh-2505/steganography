@@ -7,9 +7,9 @@ import os
 import json
 import binascii
 from flask import Flask, render_template, request, flash, redirect, url_for,send_from_directory
-#from utils.crypto import AESCipher
-#from utils.binary import bytes_to_binary, binary_to_bytes
-#from utils.steganography import embed_secret, extract_secret
+from utils.crypto import AESCipher
+from utils.binary import bytes_to_binary, binary_to_bytes
+from utils.steganography import embed_secret, extract_secret
 
 app=Flask(__name__)
 
