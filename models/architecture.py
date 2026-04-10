@@ -48,7 +48,7 @@ x = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(x)
 x = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(x)
 # Output Layer - 3 channels to reconstruct the Secret "Image"
 reveal_output = layers.Conv2D(3, (3, 3), padding='same', activation='sigmoid',name='reveal_output')(x)
- return models.Model(inputs=stego_input, outputs=reveal_output, name='Decoder')
+return models.Model(inputs=stego_input, outputs=reveal_output, name='Decoder')
 
 def get_steganography_model(input_shape=(256, 256, 3)):
 	"""
