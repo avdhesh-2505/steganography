@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract Data - Secure Steganography</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Secure Steganography</h1>
+
+        <div class="nav-tabs">
+            <a href="/">Hide Data</a>
+            <a href="/extract-page" class="active">Extract Data</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="/upload-extract" method="post" enctype="multipart/form-data" id="extractForm">
+            <div class="form-group">
+                <label for="stego_image">Select Stego Image:</label>
+                <input type="file" name="stego_image" id="stego_image" accept=".png" required>
+            </div>
+
+            <div class="form-group">
+                <label for="original_name">Enter Original Secret Filename:</label>
+                <input type="text" name="original_name" id="original_name" placeholder="e.g. document.pdf" required>
+            </div>
+
+            <input type="hidden" name="user_key" id="hidden_user_key">
+
+            <button type="button" class="btn" style="background: linear-gradient(45deg, #11998e, #38ef7d);"
+                onclick="submitWithUserAuth()">🔓 Recover File</button>
+        </form>
+
+        <script>
+            function submitWithUserAuth() {
+                const form = document.getElementById('extractForm');
+                const stego = document.getElementById('stego_image').value;
+                const name = document.getElementById('original_name').value;
+
+                if (!stego || !name) {
+                    alert("Please fill all fields first.");
+                    return;
+                }
+
+                const key = prompt("🔐 USER AUTHENTICATION: \n\nPlease enter the User Access Key:");
+                if (key) {
+                    document.getElementById('hidden_user_key').value = key;
+                    form.submit();
+                }
+            }
+        </script>
+    </div>
+</body>
+
+</html>
