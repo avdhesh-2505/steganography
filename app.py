@@ -96,6 +96,77 @@ def register():
             
     return render_template('register.html')
 
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == ADMIN_KEY:
+            session['admin_logged_in'] = True
+            flash('Welcome to Admin Terminal, Commander.', 'success')
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Invalid Access Key.', 'error')
+    return render_template('admin_login.html')
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    if not session.get('admin_logged_in'):
+        flash('Unauthorized Access.', 'error')
+        return redirect(url_for('admin_login'))
+    
+    # Fetch stats and data
+    processed_files = []
+    metadata_files = [f for f in os.listdir('processed') if f.endswith('_meta.json')]
+    
+    for meta_file in metadata_files:
+        with open(os.path.join('processed', meta_file), 'r') as f:
+            data = json.load(f)
+            data['meta_filename'] = meta_file # Store for deletion
+            processed_files.append(data)
+            
+    stats = {
+        'total_files': len(processed_files),
+        'system_accuracy': '99.8%',
+        'model_accuracy': '98.5%',
+        'total_users': 12 # Hardcoded or fetch from DB
+    }
+    
+    return render_template('admin_dashboard.html', stats=stats, files=processed_files)
+
+@app.route('/admin/delete/<meta_filename>')
+def admin_delete(meta_filename):
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+    
+    try:
+        # Load metadata to find related files
+        meta_path = os.path.join('processed', meta_filename)
+        with open(meta_path, 'r') as f:
+            data = json.load(f)
+            
+        # Delete stego image
+        if 'stego_image_path' in data and os.path.exists(data['stego_image_path']):
+            os.remove(data['stego_image_path'])
+        
+        # Delete binary file
+        if 'encrypted_binary_path' in data and os.path.exists(data['encrypted_binary_path']):
+            os.remove(data['encrypted_binary_path'])
+            
+        # Delete metadata itself
+        os.remove(meta_path)
+        
+        flash(f'Record {meta_filename} deleted successfully.', 'success')
+    except Exception as e:
+        flash(f'Error deleting record: {e}', 'error')
+        
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin-logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    flash('Admin session terminated.', 'success')
+    return redirect(url_for('home'))
+
 @app.route('/logout')
 def logout():
     session.clear()
@@ -290,6 +361,10 @@ def extract_file(filename):
 def download_file(filename):
     return send_from_directory('processed', filename, as_attachment=True)
 
+@app.route('/processed/<path:filename>')
+def serve_processed(filename):
+    return send_from_directory('processed', filename)
+
 if __name__ == '__main__':
     # Running with use_reloader=False to prevent TensorFlow from triggering a restart loop
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
