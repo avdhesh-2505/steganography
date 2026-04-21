@@ -1,180 +1,240 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Register - StegoSecure</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StegoShield | Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff1f1f;
+            --primary-dark: #b30000;
+            --bg-dark: #050505;
+            --bg-card: #121212;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: rgba(255, 31, 31, 0.25);
+            --glow: 0 0 20px rgba(255, 31, 31, 0.4);
+        }
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: black;
-  color: white;
-  overflow: hidden;
-}
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-body::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 30% 20%, rgba(255,0,0,0.2), transparent 40%),
-              radial-gradient(circle at 70% 80%, rgba(255,0,0,0.1), transparent 40%);
-  animation: movebg 10s infinite alternate;
-  z-index: -1;
-}
+        /* Background Effects */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 31, 31, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 31, 31, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
 
-@keyframes movebg {
-  0%   { transform: scale(1); }
-  100% { transform: scale(1.2); }
-}
+        .scanline {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 31, 31, 0.4), transparent);
+            animation: scan 6s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.container {
-  width: 400px;
-  padding: 40px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 15px;
-  border: 1px solid rgba(255,0,0,0.4);
-  backdrop-filter: blur(10px);
-  text-align: center;
-  box-shadow: 0 0 25px rgba(255,0,0,0.3);
-}
+        @keyframes scan {
+            from { top: -2px; }
+            to { top: 100%; }
+        }
 
-.container h2 {
-  color: red;
-  margin-bottom: 25px;
-  text-shadow: 0 0 10px red;
-}
+        .card {
+            background: rgba(18, 18, 18, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            z-index: 10;
+            animation: cardFadeIn 0.6s ease-out;
+            position: relative;
+        }
 
-/* Flash messages */
-.flash-messages {
-  margin-bottom: 15px;
-  text-align: left;
-}
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.flash {
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 14px;
-  margin-bottom: 8px;
-}
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-.flash.error {
-  background: rgba(255, 0, 0, 0.15);
-  border: 1px solid rgba(255, 0, 0, 0.5);
-  color: #ff6b6b;
-}
+        .logo-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
 
-.flash.success {
-  background: rgba(0, 200, 0, 0.1);
-  border: 1px solid rgba(0, 200, 0, 0.4);
-  color: #6bff6b;
-}
+        .form-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
 
-.input-group {
-  margin-bottom: 18px;
-}
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-input {
-  width: 100%;
-  padding: 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 6px;
-  color: white;
-  font-size: 16px;
-  outline: none;
-  transition: 0.3s;
-}
+        label {
+            display: block;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
 
-input:focus {
-  border-color: red;
-  box-shadow: 0 0 8px red;
-}
+        input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: 0.3s;
+        }
 
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 30px;
-  background: linear-gradient(45deg, #ff0000, #8b0000);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            background: rgba(255, 31, 31, 0.05);
+        }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px red;
-}
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
 
-p {
-  margin-top: 20px;
-  color: #bbb;
-}
+        .btn:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
 
-a {
-  color: red;
-  text-decoration: none;
-}
+        .footer-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
 
-a:hover {
-  text-decoration: underline;
-}
-</style>
+        .footer-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        .flash {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .flash.error { background: rgba(255, 31, 31, 0.2); border: 1px solid var(--primary); color: #ff6b6b; }
+    </style>
 </head>
-
 <body>
-<div class="container">
 
-  <h2>Create Account</h2>
+    <div class="bg-grid"></div>
+    <div class="scanline"></div>
 
-  <!-- Flash messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="flash-messages">
-        {% for category, message in messages %}
-          <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
+    <div class="card">
+        <div class="logo-section">
+            <div class="logo-title">Stego<span>Shield</span></div>
+            <div style="font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-top: 5px;">CYBERSECURITY PROTOCOL ACTIVATED</div>
+        </div>
 
-  <form method="POST" action="/register">
+        <div class="form-title">Create Access Identity</div>
 
-    <div class="input-group">
-      <!-- ✅ name="name" matches backend's request.form['name'] -->
-      <input type="text" name="name" placeholder="Full Name" required>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('register') }}" method="POST">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="Agent Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Security Email</label>
+                <input type="email" name="email" placeholder="identity@shield.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Access Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Access Code</label>
+                <input type="password" name="confirm_password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn">Initialize Identity</button>
+        </form>
+
+        <div class="footer-link">
+            Already registered? <a href="{{ url_for('login') }}">Access Terminal</a>
+        </div>
     </div>
 
-    <div class="input-group">
-      <input type="email" name="email" placeholder="Email" required>
-    </div>
-
-    <div class="input-group">
-      <input type="password" name="password" placeholder="Password" required>
-    </div>
-
-    <!-- ✅ Added confirm_password field the backend expects -->
-    <div class="input-group">
-      <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-    </div>
-
-    <button type="submit">Register</button>
-
-  </form>
-
-  <p>Already have an account? <a href="/login">Login</a></p>
-
-</div>
 </body>
 </html>

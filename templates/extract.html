@@ -1,66 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extract Data - Secure Steganography</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Extract Secret | StegoShield</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff1f1f;
+            --primary-dark: #b30000;
+            --bg-dark: #050505;
+            --bg-card: #121212;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: rgba(255, 31, 31, 0.2);
+            --glow: 0 0 15px rgba(255, 31, 31, 0.4);
+            --error: #ff4d4d;
+            --success: #00ff88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--text-main); }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); text-shadow: var(--glow); }
+
+        /* Main Content */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+            background: radial-gradient(circle at center, rgba(255, 31, 31, 0.05) 0%, transparent 70%);
+        }
+
+        .extract-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--text-main);
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary);
+            background: rgba(255, 31, 31, 0.05);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            color: #fff;
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #000;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .alert.error { background: rgba(255, 77, 77, 0.2); border: 1px solid var(--error); color: var(--error); }
+        .alert.success { background: rgba(0, 255, 136, 0.2); border: 1px solid var(--success); color: var(--success); }
+
+        .result-card {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--success);
+            border-radius: 15px;
+        }
+
+        .result-card h3 {
+            color: var(--success);
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Secure Steganography</h1>
 
-        <div class="nav-tabs">
-            <a href="/">Hide Data</a>
-            <a href="/extract-page" class="active">Extract Data</a>
+    <nav>
+        <a href="{{ url_for('home') }}" class="logo">Stego<span>Shield</span></a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('upload') }}">Embed</a></li>
+            <li><a href="{{ url_for('extract_page') }}">Extract</a></li>
+        </ul>
+        <div class="nav-auth">
+            {% if session.get('user_id') %}
+                <span style="color: var(--text-dim); font-size: 0.9rem;">Agent: {{ session.get('user_name') }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline" style="width: auto; padding: 8px 15px; font-size: 0.8rem; border-color: var(--primary); color: var(--primary); text-decoration: none;">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-outline" style="width: auto; padding: 8px 15px; font-size: 0.8rem; text-decoration: none;">Login</a>
+            {% endif %}
         </div>
+    </nav>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-        <div class="alert {{ category }}">{{ message }}</div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
+    <div class="container">
+        <div class="extract-card">
+            <h1>Extract Secret</h1>
 
-        <form action="/upload-extract" method="post" enctype="multipart/form-data" id="extractForm">
-            <div class="form-group">
-                <label for="stego_image">Select Stego Image:</label>
-                <input type="file" name="stego_image" id="stego_image" accept=".png" required>
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            {% if recovered_filename %}
+            <div class="result-card">
+                <h3>✅ Recovery Successful!</h3>
+                <p style="margin-bottom: 20px;">Your secret file has been successfully extracted from the image and decrypted.</p>
+                <a href="{{ url_for('download_file', filename=recovered_filename) }}" class="btn btn-success" style="display: block; text-decoration: none;">Download Recovered File</a>
+                <a href="{{ url_for('extract_page') }}" style="display: block; margin-top: 15px; color: var(--text-dim); text-decoration: none;">← Extract Another</a>
             </div>
+            {% else %}
+            <form action="/upload-extract" method="post" enctype="multipart/form-data" id="extractForm">
+                <div class="form-group">
+                    <label for="stego_image">1. Select Stego Image (PNG)</label>
+                    <input type="file" name="stego_image" id="stego_image" accept=".png" required>
+                </div>
 
-            <div class="form-group">
-                <label for="original_name">Enter Original Secret Filename:</label>
-                <input type="text" name="original_name" id="original_name" placeholder="e.g. document.pdf" required>
+                <div class="form-group">
+                    <label for="original_name">2. Target Metadata Name</label>
+                    <input type="text" name="original_name" id="original_name" placeholder="e.g. document.pdf" required>
+                    <small style="color: #666; display: block; margin-top: 5px;">Required to locate encryption keys.</small>
+                </div>
+
+                <input type="hidden" name="user_key" id="hidden_user_key">
+
+                <button type="button" class="btn" onclick="submitWithUserAuth()">🔓 Decrypt & Recover</button>
+            </form>
+            {% endif %}
+
+            <div class="footer-note">
+                End-to-End Encrypted Communication Channel
             </div>
-
-            <input type="hidden" name="user_key" id="hidden_user_key">
-
-            <button type="button" class="btn" style="background: linear-gradient(45deg, #11998e, #38ef7d);"
-                onclick="submitWithUserAuth()">🔓 Recover File</button>
-        </form>
-
-        <script>
-            function submitWithUserAuth() {
-                const form = document.getElementById('extractForm');
-                const stego = document.getElementById('stego_image').value;
-                const name = document.getElementById('original_name').value;
-
-                if (!stego || !name) {
-                    alert("Please fill all fields first.");
-                    return;
-                }
-
-                const key = prompt("🔐 USER AUTHENTICATION: \n\nPlease enter the User Access Key:");
-                if (key) {
-                    document.getElementById('hidden_user_key').value = key;
-                    form.submit();
-                }
-            }
-        </script>
+        </div>
     </div>
-</body>
 
+    <script>
+        function submitWithUserAuth() {
+            const form = document.getElementById('extractForm');
+            const stego = document.getElementById('stego_image').value;
+            const name = document.getElementById('original_name').value;
+
+            if(!stego || !name) {
+                alert("Please select the stego image and enter the metadata name.");
+                return;
+            }
+
+            const key = prompt("🔐 USER AUTHENTICATION REQUIRED\n\nPlease enter the User Access Key to extract and decrypt data:");
+            if (key) {
+                document.getElementById('hidden_user_key').value = key;
+                form.submit();
+            }
+        }
+    </script>
+
+</body>
 </html>
