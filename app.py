@@ -14,7 +14,7 @@ app.secret_key = 'super_secret_key_for_session'  # Required for flash messages
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_IMAGE_EXTENSIONS = {'png'}
 ALLOWED_DOC_EXTENSIONS = {'pdf', 'txt'}
-MAX_FILE_SIZE = 1 * 1024 * 1024  # 1 MB
+MAX_FILE_SIZE = 70 * 1024  # 70 KB (limited by 1024x1024 image capacity with 5x error correction)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -30,7 +30,11 @@ def allowed_file(filename, allowed_extensions):
 def home():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET'])
+def upload_page():
+    return render_template('uploads.html')
+
+@app.route('/uploads', methods=['POST'])
 def upload_files():
     if 'cover_image' not in request.files or 'secret_file' not in request.files:
         flash('No file part', 'error')
@@ -127,7 +131,7 @@ def upload_files():
         json.dump(metadata, f, indent=4)
 
     flash(f'Steganography Complete!', 'success')
-    return render_template('index.html', stego_filename=stego_filename)
+    return render_template('uploads.html', stego_filename=stego_filename)
 
 @app.route('/extract-page')
 def extract_page():
